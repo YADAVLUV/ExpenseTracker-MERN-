@@ -1,5 +1,6 @@
 import User from "../models/UserSchema.js";
 import bcrypt from "bcrypt";
+import jwt from "jwt";
 
 export const registerControllers = async (req, res, next) => {
     try{
@@ -155,7 +156,7 @@ export const forgetpassword  = async (req, res, next) => {
           await user.save();
       
           // Create reset link
-          const resetLink = `http://localhost:3000/reset-password/${token}`;
+          const resetLink = `https://expensetracker-mern-zdny.onrender.com/reset-password/${token}`;
       
           // Send email
           const mailOptions = {

@@ -5,6 +5,7 @@ import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { Link } from "react-router-dom";
+import {forgetpassword} from "../../utils/ApiRequest"
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState("");
@@ -30,7 +31,7 @@ const ForgetPassword = () => {
     setLoading(true);
 
     try {
-      const { data } = await axios.post("https://your-api.com/api/forgot-password", { email });
+      const { data } = await axios.post(forgetpassword, { email });
 
       if (data.success) {
         alert("Password reset link sent! Check your email.");
