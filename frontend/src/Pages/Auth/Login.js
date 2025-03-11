@@ -45,9 +45,13 @@ const Login = () => {
     e.preventDefault();
 
     const { email, password } = values;
-
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Invalid email format", toastOptions);
+      return;
+    }
     setLoading(true);
-
+    try{
     const { data } = await axios.post(loginAPI, {
       email,
       password,
@@ -58,8 +62,10 @@ const Login = () => {
       navigate("/");
       toast.success(data.message, toastOptions);
       setLoading(false);
-    } else {
-      toast.error(data.message, toastOptions);
+    
+    } }
+    catch(error) {
+      toast.error(error.response.data.message, toastOptions);
       setLoading(false);
     }
   };

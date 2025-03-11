@@ -10,6 +10,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { registerAPI } from "../../utils/ApiRequest";
 import axios from "axios";
+import { Alert } from 'react-alert';
 
 const Register = () => {
 
@@ -57,9 +58,20 @@ const Register = () => {
     e.preventDefault();
 
       const {name, email, password} = values;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Invalid email format", toastOptions);
+      return;
+    }
+    const passwordRegex = /^(?=.*[A-Z]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      toast.error("Weak password! Use at least 8 chars & 1 uppercase letter.", toastOptions);
+      return;
+    }
+
 
       setLoading(false);
-     
+     try{
       const {data} = await axios.post(registerAPI, {
         name,
         email,
@@ -72,9 +84,10 @@ const Register = () => {
         toast.success(data.message, toastOptions);
         setLoading(true);
         navigate("/");
-      }
-      else{
-        toast.error(data.message, toastOptions);
+      }}
+      catch(error){
+        console.log(error);
+        toast.error(error.response.data.message, toastOptions);
         setLoading(false);
       }
     };

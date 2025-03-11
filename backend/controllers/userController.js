@@ -136,3 +136,55 @@ export const allUsers = async (req, res, next) => {
         next(err);
     }
 }
+export const forgetpassword  = async (req, res, next) => {
+        try {
+          const { email } = req.body;
+      
+          // Check if user exists
+          const user = await User.findOne({ email });
+          if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+          }
+      
+          // Generate a secure token
+          const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1h" });
+      
+          // Save the token to the user model
+          user.resetPasswordToken = token;
+          user.resetPasswordExpires = Date.now() + 3600000; // Token expires in 1 hour
+          await user.save();
+      
+          // Create reset link
+          const resetLink = `http://localhost:3000/reset-password/${token}`;
+      
+          // Send email
+          const mailOptions = {
+            from: process.env.EMAIL,
+            to: user.email,
+            subject: "Password Reset Request",
+            html: `<h3>Password Reset</h3>
+                  <p>Click the link below to reset your password:</p>
+                  <a href="${resetLink}">${resetLink}</a>
+                  <p>This link will expire in 1 hour.</p>`,
+          };
+      
+          await transporter.sendMail(mailOptions);
+      
+          res.json({ success: true, message: "Password reset link sent to your email" });
+      
+        } catch (error) {
+          console.error("Error in forgot-password:", error);
+          res.status(500).json({ success: false, message: "Internal Server Error" });
+        }
+      }
+
+    export const resetpassword = async (req, res) => {
+        try {
+          const { token } = req.params;
+          const { newPassword } = req.body;
+          await authService.resetPassword(token, newPassword);
+          res.json({ success: true, message: "Password reset successful!" });
+        } catch (error) {
+          res.status(400).json({ success: false, message: error.message });
+        }
+      }
