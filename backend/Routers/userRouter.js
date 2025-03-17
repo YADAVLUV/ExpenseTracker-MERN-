@@ -9,7 +9,7 @@ router.route("/login").post(loginControllers);
 
 router.route("/setAvatar/:id").post(setAvatarController);
 
-router.route("/forgetpassword").post(forgetpassword);
+router.route("/forgotPassword").post(forgetpassword);
 
 router.route("/resetpassword").post(resetpassword);
 

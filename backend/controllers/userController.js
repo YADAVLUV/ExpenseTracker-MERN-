@@ -1,6 +1,7 @@
 import User from "../models/UserSchema.js";
 import bcrypt from "bcrypt";
 import jwt  from 'jsonwebtoken';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export const registerControllers = async (req, res, next) => {
     try{
