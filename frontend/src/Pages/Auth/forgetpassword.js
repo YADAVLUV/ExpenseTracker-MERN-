@@ -34,10 +34,10 @@ const ForgetPassword = () => {
       const { data } = await axios.post(forgetpassword, { email });
 
       if (data.success) {
-        alert("Password reset link sent! Check your email.");
+        //alert("Password reset link sent! Check your email.");
         toast.success("Password reset link sent!");
       } else {
-        alert(data.message || "Something went wrong. Try again.");
+        //alert(data.message || "Something went wrong. Try again.");
         toast.error(data.message || "Something went wrong!");
       }
     } catch (error) {

@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Home from './Pages/Home/Home';
 import SetAvatar from './Pages/Avatar/setAvatar';
 import ForgetPassword from './Pages/Auth/forgetpassword';
+import ResetPassword from './Pages/Auth/resetpassword';
 
 
 
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/setAvatar" element={<SetAvatar />} />
           <Route path="/forgotPassword" element={<ForgetPassword />} />
+          <Route path="/resetpassword" element={<ResetPassword/>}/>
         </Routes>
       </BrowserRouter>
       </div>
