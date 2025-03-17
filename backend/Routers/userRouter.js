@@ -11,7 +11,7 @@ router.route("/setAvatar/:id").post(setAvatarController);
 
 router.route("/forgotPassword").post(forgetpassword);
 
-router.route("/reset-password").post(resetpassword);
+router.route("/resetpassword").post(resetpassword);
 
 
 export default router;
