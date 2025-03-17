@@ -158,7 +158,7 @@ export const forgetpassword  = async (req, res, next) => {
           await user.save();
       
           // Create reset link
-          const resetLink = `https://expensetracker-mern-zdny.onrender.com/reset-password/${token}`;
+          const resetLink = `https://expensetracker-mern-zdny.onrender.com/resetpassword/${token}`;
       
           // Send email
           const mailOptions = {
