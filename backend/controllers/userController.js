@@ -169,6 +169,14 @@ export const forgetpassword  = async (req, res, next) => {
                   <a href="${resetLink}">${resetLink}</a>
                   <p>This link will expire in 1 hour.</p>`,
           };
+          const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: process.env.EMAIL,
+              pass: "Yadavluv909@" 
+            }
+          });
+      
       
           await transporter.sendMail(mailOptions);
       
