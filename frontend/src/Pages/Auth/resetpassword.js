@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import Particles from "react-tsparticles";
+import {resetpassword} from "../../utils/ApiRequest.js"
 
 const ResetPassword = () => {
     const { token } = useParams();
@@ -24,7 +25,7 @@ const ResetPassword = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`/api/auth/resetpassword/${token}`, {
+            const response = await fetch(`${resetpassword}/${token}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ newPassword }),
