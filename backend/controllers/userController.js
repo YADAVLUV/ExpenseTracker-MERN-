@@ -158,7 +158,7 @@ export const forgetpassword  = async (req, res, next) => {
           await user.save();
       
           // Create reset link
-          const resetLink = `https://expense-tracker-mern-loks.vercel.app//resetpassword/${token}`;
+          const resetLink = `https://expense-tracker-mern-loks.vercel.app/resetpassword/${token}`;
       
           // Send email
           const mailOptions = {
