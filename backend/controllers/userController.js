@@ -174,7 +174,7 @@ export const forgetpassword  = async (req, res, next) => {
             service: 'gmail',
             auth: {
               user: process.env.EMAIL,
-              pass: "Yadavluv909@" 
+              pass: "scbanbcobfnfrylc" 
             }
           });
       
