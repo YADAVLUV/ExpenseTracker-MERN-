@@ -189,13 +189,41 @@ export const forgetpassword  = async (req, res, next) => {
         }
       }
 
-    export const resetpassword = async (req, res) => {
+      export const resetpassword = async (req, res) => {
         try {
-          const { token } = req.params;
-          const { newPassword } = req.body;
-          await authService.resetPassword(token, newPassword);
-          res.json({ success: true, message: "Password reset successful!" });
+            const { token } = req.params;
+            const { newPassword } = req.body;
+    
+            if (!token || !newPassword) {
+                return res.status(400).json({ success: false, message: "Invalid request" });
+            }
+    
+            // Verify the token
+            const decoded = jwt.verify(token, JWT_SECRET);
+            if (!decoded) {
+                return res.status(400).json({ success: false, message: "Invalid or expired token" });
+            }
+    
+            // Find user by ID
+            const user = await User.findById(decoded.id);
+            if (!user || user.resetPasswordToken !== token || user.resetPasswordExpires < Date.now()) {
+                return res.status(400).json({ success: false, message: "Invalid or expired token" });
+            }
+    
+            // Hash new password
+            const salt = await bcrypt.genSalt(10);
+            user.password = await bcrypt.hash(newPassword, salt);
+            
+            // Clear reset token fields
+            user.resetPasswordToken = undefined;
+            user.resetPasswordExpires = undefined;
+    
+            // Save the updated user
+            await user.save();
+    
+            res.json({ success: true, message: "Password reset successful!" });
         } catch (error) {
-          res.status(400).json({ success: false, message: error.message });
+            res.status(500).json({ success: false, message: "Internal Server Error" });
         }
-      }
+    };
+    
