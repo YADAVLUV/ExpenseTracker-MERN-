@@ -10,7 +10,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { registerAPI } from "../../utils/ApiRequest";
 import axios from "axios";
-import { Alert } from 'react-alert';
 
 const Register = () => {
 
