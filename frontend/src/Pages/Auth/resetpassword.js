@@ -25,12 +25,13 @@ const ResetPassword = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`${resetpassword}/${token}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ newPassword }),
-            });
-            const data = await response.json();
+            // const response = await fetch(`${resetpassword}/${token}`, {
+            //     method: "POST",
+            //     headers: { "Content-Type": "application/json" },
+            //     body: JSON.stringify({ newPassword }),
+            // });
+            // const data = await response.json();
+            const response = await axios.post(`${resetpassword}/${token}`, { newPassword });
 
             if (response.ok) {
                 setMessage("Password reset successful! Redirecting to login...");
