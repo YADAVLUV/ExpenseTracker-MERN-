@@ -1,5 +1,14 @@
 //const host = "https://expense-tracker-app-knl1.onrender.com";
-const host = "https://expensetracker-mern-zdny.onrender.com";
+//const host = "https://expensetracker-mern-zdny.onrender.com";
+//const host = "http://localhost:3000";
+// Automatically detect environment
+const host = 
+  process.env.NODE_ENV === "production"
+    ? "https://expensetracker-mern-zdny.onrender.com"
+    : "http://localhost:3000";
+
+console.log("🌐 API Host:", host);
+
 export const setAvatarAPI = `${host}/api/auth/setAvatar`;
 export const registerAPI = `${host}/api/auth/register`;
 export const loginAPI = `${host}/api/auth/login`;
