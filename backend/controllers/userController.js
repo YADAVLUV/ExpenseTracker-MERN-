@@ -8,10 +8,19 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // ✅ Create transporter once
 const transporter = nodemailer.createTransport({
   service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL,
     pass: process.env.EMAIL_PASSWORD
-  }
+  },
+  tls: {
+    rejectUnauthorized: false
+  },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000
 });
 
 // Test connection
@@ -147,8 +156,7 @@ export const allUsers = async (req, res, next) => {
     catch(err){
         next(err);
     }
-}
-
+};
 export const forgetpassword = async (req, res, next) => {
     try {
         console.log("🔍 Forgot password endpoint called");
@@ -178,18 +186,42 @@ export const forgetpassword = async (req, res, next) => {
         await user.save();
         console.log("💾 Token saved to database");
 
-        // ✅ FIXED: Updated reset link domain
-        const resetLink = `https://expensetracker-mern-zdny.onrender.com/resetpassword/${token}`;
+        // ✅ FIXED: Point to FRONTEND URL
+        const resetLink = process.env.NODE_ENV === 'production'
+            ? `${process.env.FRONTEND_URL}/resetpassword/${token}`  // Production frontend
+            : `http://localhost:3000/resetpassword/${token}`;        // Local frontend
 
         // Send email
         const mailOptions = {
             from: process.env.EMAIL,
             to: user.email,
             subject: "Password Reset Request",
-            html: `<h3>Password Reset</h3>
-                  <p>Click the link below to reset your password:</p>
-                  <a href="${resetLink}">${resetLink}</a>
-                  <p>This link will expire in 1 hour.</p>`,
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #333;">Password Reset Request</h2>
+                    <p>Hello ${user.name || 'User'},</p>
+                    <p>You requested to reset your password. Click the button below to proceed:</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="${resetLink}" 
+                           style="background-color: #007bff; 
+                                  color: white; 
+                                  padding: 12px 30px; 
+                                  text-decoration: none; 
+                                  border-radius: 5px;
+                                  display: inline-block;">
+                            Reset Password
+                        </a>
+                    </div>
+                    <p>Or copy and paste this link in your browser:</p>
+                    <p style="word-break: break-all; color: #007bff;">${resetLink}</p>
+                    <p style="color: #666; font-size: 14px;">
+                        <strong>Note:</strong> This link will expire in 1 hour.
+                    </p>
+                    <p style="color: #666; font-size: 14px;">
+                        If you didn't request this password reset, please ignore this email.
+                    </p>
+                </div>
+            `,
         };
 
         console.log("📧 Sending email to:", user.email);
@@ -206,13 +238,21 @@ export const forgetpassword = async (req, res, next) => {
     } catch (error) {
         console.error("❌ Error in forgot-password:", error.message);
         console.error("Stack trace:", error.stack);
+        
+        // More detailed error for email issues
+        if (error.code === 'ECONNECTION' || error.code === 'ETIMEDOUT') {
+            return res.status(500).json({ 
+                success: false, 
+                message: "Failed to send email. Please check your email configuration." 
+            });
+        }
+        
         return res.status(500).json({ 
             success: false, 
             message: error.message || "Internal Server Error" 
         });
     }
-}
-
+};
 export const resetpassword = async (req, res) => {
     try {
         console.log("🔍 Reset password endpoint called");
