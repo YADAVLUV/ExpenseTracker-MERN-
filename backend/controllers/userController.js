@@ -186,10 +186,9 @@ export const forgetpassword = async (req, res, next) => {
         await user.save();
         console.log("💾 Token saved to database");
 
-        // ✅ FIXED: Point to FRONTEND URL
-        const resetLink = process.env.NODE_ENV === 'production'
-            ? `${process.env.FRONTEND_URL}/resetpassword/${token}`  // Production frontend
-            : `http://localhost:3000/resetpassword/${token}`;        // Local frontend
+        // Always point to FRONTEND_URL (fallback localhost:3001)
+        const frontendBase = process.env.FRONTEND_URL || 'http://localhost:3001';
+        const resetLink = `${frontendBase}/resetpassword/${token}`;
 
         // Send email
         const mailOptions = {
