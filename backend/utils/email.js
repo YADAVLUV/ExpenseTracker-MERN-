@@ -2,7 +2,7 @@ import axios from "axios";
 import nodemailer from "nodemailer";
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const EMAIL_FROM = process.env.EMAIL_FROM || process.env.EMAIL;
+const EMAIL_FROM = process.env.EMAIL_FROM || 'Expense Tracker <onboarding@resend.dev>'; // ✅ Added default with display name
 
 export async function sendEmail({ to, subject, html }) {
   if (!to || !subject || !html) {
@@ -39,8 +39,11 @@ export async function sendEmail({ to, subject, html }) {
 
   await transporter.verify();
 
-  const info = await transporter.sendMail({ from: EMAIL_FROM || process.env.EMAIL, to, subject, html });
+  const info = await transporter.sendMail({ 
+    from: EMAIL_FROM || `Expense Tracker <${process.env.EMAIL}>`, // ✅ Also added display name for Gmail fallback
+    to, 
+    subject, 
+    html 
+  });
   return { id: info.messageId, response: info.response };
 }
-
-
